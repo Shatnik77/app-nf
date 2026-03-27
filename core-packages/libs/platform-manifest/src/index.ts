@@ -1,0 +1,1 @@
+export const EMPTY_PACKAGE = true; // Hack: There should be any code for building
