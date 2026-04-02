@@ -21,13 +21,10 @@
       "defaultConfiguration": "production"
     },
     "serve-proxy": {
-      "executor": "@angular-architects/native-federation:build",
+      "executor": "nx:run-commands",
       "options": {
-        "target": "remote-app:serve-original:proxy",
-        "rebuildDelay": 500,
-        "dev": true,
-        "cacheExternalArtifacts": false,
-        "port": 0
+        "command": "npx vite serve -c apps/remote-app/proxy/dev/vite.config.ts",
+        "port": 4203
       }
     },
     "serve": {
@@ -107,10 +104,6 @@
           "buildTarget": "remote-app:esbuild:production"
         },
         "development": {
-          "buildTarget": "remote-app:esbuild:development"
-        },
-        "proxy": {
-          "proxyConfig": "apps/remote-app/proxy/dev/proxy.conf.dev.ts",
           "buildTarget": "remote-app:esbuild:development"
         }
       },

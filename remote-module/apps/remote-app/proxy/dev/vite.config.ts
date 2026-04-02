@@ -1,10 +1,11 @@
-import type { ProxyOptions } from 'vite';
+import type { CommonServerOptions } from 'vite';
+import { defineConfig } from 'vite';
 
 const HOST = 'http://localhost:4200';
 const REMOTE = 'http://localhost:4202';
 const REMOTE_APP_NAME = 'remote-app';
 
-const PROXY_CONFIG: Record<string, ProxyOptions> = {
+const PROXY_CONFIG: CommonServerOptions['proxy'] = {
   '/federation.manifest.json': {
     target: HOST,
     changeOrigin: true,
@@ -27,13 +28,13 @@ const PROXY_CONFIG: Record<string, ProxyOptions> = {
       proxy.on('error', (err) => console.error('[Proxy] Error:', err))
     }
   },
-  [`^/remotes/${REMOTE_APP_NAME}`]: {
+  [`^/remotes/${REMOTE_APP_NAME}|src|@vite|@fs|node_modules/\\.vite|.*\\.ts$|.*\\.map`]: {
     target: REMOTE,
     changeOrigin: true,
     secure: false,
     rewrite: (path) => path.replace(new RegExp(`^/remotes/${REMOTE_APP_NAME}`), ''),
   },
-  '/**': {
+  '^/.*': {
       target: HOST,
       changeOrigin: true,
       secure: false,
@@ -41,4 +42,8 @@ const PROXY_CONFIG: Record<string, ProxyOptions> = {
   }
 }
 
-module.exports = PROXY_CONFIG;
+export default defineConfig({
+  server: {
+    proxy: PROXY_CONFIG
+  }
+})
